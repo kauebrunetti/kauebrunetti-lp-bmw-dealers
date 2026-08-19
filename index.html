@@ -549,10 +549,12 @@ class Component extends DCLogic {
         body: JSON.stringify(dados)
       }).then(function (r) {
         if (r.ok) { ok(); return; }
-        return r.text().then(function (t) { throw new Error('HTTP ' + r.status + ' ' + t); });
+        return r.text().then(function (t) { throw new Error('HTTP ' + r.status + ' — ' + t); });
       }).catch(function (err) {
-        console.warn('RD Station:', err && err.message);
-        say('Não foi possível enviar. Tente novamente.', '#ffb4b4');
+        var m = (err && err.message) || '';
+        console.warn('RD Station:', m);
+        var detalhe = m.replace(/^HTTP /, '').slice(0, 220);
+        say('Não foi possível enviar. ' + (detalhe || 'Tente novamente.'), '#ffb4b4');
       }).finally(function () {
         btn.disabled = false;
         btn.style.opacity = '1';

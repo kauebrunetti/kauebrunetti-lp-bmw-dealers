@@ -31,7 +31,8 @@ module.exports = async function handler(req, res) {
     cf_cep: b.cep,
     cf_tipo_de_local: b.tipo_local,
     cf_modelo_do_veiculo: b.modelo_veiculo,
-    cf_concessionaria_gac: b.concessionaria,
+    cf_concessionaria_bmw: b.concessionaria,
+    cf_concessionaria: b.concessionaria,
     traffic_source: b.traffic_source,
     utm_source: b.utm_source,
     utm_medium: b.utm_medium,
@@ -53,7 +54,9 @@ module.exports = async function handler(req, res) {
     // Enviamos variantes de identificador dos campos customizados; se o RD reclamar
     // de alguma, removemos apenas as citadas no erro e reenviamos uma vez.
     for (let tentativa = 0; tentativa < 3 && !r.ok && r.status === 400; tentativa++) {
-      const invalidos = Object.keys(payload).filter((k) => k.indexOf('cf_') === 0 && texto.indexOf(k) !== -1);
+      let invalidos = Object.keys(payload).filter((k) => k.indexOf('cf_') === 0 && texto.indexOf(k) !== -1);
+      // se o RD nao citou o campo, tenta sem nenhum campo customizado
+      if (!invalidos.length) invalidos = Object.keys(payload).filter((k) => k.indexOf('cf_') === 0);
       if (!invalidos.length) break;
       console.warn('Removendo campos rejeitados pelo RD', invalidos.join(', '));
       invalidos.forEach((k) => delete payload[k]);
