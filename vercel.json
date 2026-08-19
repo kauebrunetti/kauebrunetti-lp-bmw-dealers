@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/lead.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "politica-de-privacidade.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "support.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/lead",
+      "dest": "/api/lead.js"
+    },
+    {
+      "src": "/support.js",
+      "dest": "/support.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/politica-de-privacidade\\.html",
+      "dest": "/politica-de-privacidade.html"
+    },
+    {
+      "src": "/politica-de-privacidade",
+      "dest": "/politica-de-privacidade.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

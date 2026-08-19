@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BeGreen · Energia própria para sua casa</title>
+<meta name="description" content="Carregador para veículo elétrico, energia fotovoltaica e bateria de armazenamento com projeto, homologação e instalação por equipe própria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #070a08; }
+  * { box-sizing: border-box; }
+  a { color: #23D964; text-decoration: none; }
+  a:hover { color: #7cf0a4; }
+  input, select, button { font-family: inherit; }
+  input::placeholder { color: rgba(255,255,255,0.4); }
+  input:focus, select:focus { border-bottom-color: #23D964 !important; }
+  #btnEnviar:hover { background: #43ef7e !important; }
+  input:invalid[data-touched], select:invalid[data-touched] { border-bottom-color: #ff6b6b !important; }
+  #pageInner { height: 100dvh; min-height: 0; overflow: hidden; }
+  #hero { position: absolute; inset: 0; overflow: hidden; }
+  #stage { position: absolute; inset: 0; }
+  #heroImg { position: absolute; left: 0; top: 0; max-width: none; }
+  #stage .veil { position: absolute; inset: 0; pointer-events: none; }
+  #stageGrid { position: absolute; inset: 0; display: grid; grid-template-rows: auto 1fr auto;
+    padding: clamp(12px, 1.6vw, 26px) calc(clamp(352px, 28vw, 448px) + clamp(24px, 4.2vw, 76px) + 30px) clamp(18px, 2.2vw, 38px) clamp(24px, 4.2vw, 76px); }
+  .fx { position: absolute; pointer-events: none; mix-blend-mode: screen; will-change: opacity, transform; }
+
+  #fxEv { border-radius: 50%; }
+  #fxEv span { position: absolute; inset: 0; border-radius: 50%;
+    border: 1px solid rgba(180,255,215,0.55); opacity: 0; filter: blur(0.2px);
+    animation: evPulse 14s cubic-bezier(.16,.7,.3,1) infinite; }
+  #fxEv span:nth-child(2) { animation-delay: 1.6s; }
+  #fxEv i { position: absolute; inset: 22%; border-radius: 50%; filter: blur(0.8px);
+    background: radial-gradient(circle, rgba(190,255,220,0.5) 0%, rgba(60,215,130,0.18) 52%, rgba(60,215,130,0) 76%);
+    animation: evBreath 14s ease-in-out infinite; }
+  @keyframes evPulse { 0%, 70% { transform: scale(0.42); opacity: 0; } 74% { opacity: 0.75; }
+    92% { transform: scale(1.05); opacity: 0; } 100% { transform: scale(1.05); opacity: 0; } }
+  @keyframes evBreath { 0%, 66% { opacity: 0; transform: scale(0.86); } 76% { opacity: 0.85; transform: scale(1.02); }
+    88% { opacity: 0.3; transform: scale(0.96); } 96%, 100% { opacity: 0; transform: scale(0.86); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    #fxEv span, #fxEv i { animation: none; }
+  }
+  #mobileHead { display: none; }
+  #mobileSystems { display: none; }
+
+  #formZone { position: absolute; top: auto; height: auto;
+    bottom: clamp(14px, 1.8vw, 30px);
+    right: clamp(14px, 2vw, 38px);
+    width: clamp(272px, 22vw, 344px); display: flex; align-items: flex-end;
+    transform-origin: 100% 100%; }
+  #formCard { max-height: none; overflow: hidden; }
+
+  @media (max-width: 900px) {
+    body { overflow-y: auto; }
+    #pageInner { height: auto !important; overflow: visible; display: grid; }
+    #hero { position: relative; inset: auto; overflow: visible; }
+    #stage { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 1600 / 685; }
+    #heroImg { object-fit: cover; object-position: 50% 100%; }
+    #stageGrid { display: none !important; }
+    #mobileHead { display: flex; flex-direction: column; gap: 16px; padding: 22px 20px 18px; }
+    #mobileSystems { display: grid !important; }
+    #formZone { position: relative; inset: auto; right: auto; top: auto; bottom: auto; width: auto; height: auto; transform: none !important; padding: 0 14px 22px; }
+    #formCard { max-height: none; overflow: visible; }
+    #fieldGrid { grid-template-columns: 1fr 1fr !important; }
+  }
+  @media (max-width: 460px) {
+    #fieldGrid { grid-template-columns: 1fr !important; }
+  }
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#070a08">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#070a08"></rect>
+    <circle cx="600" cy="400" r="170" fill="#23D964"></circle>
+    <rect x="740" y="480" width="300" height="220" rx="24" fill="#0f1a13" stroke="#23D964" stroke-width="6"></rect>
+  </svg>
+</template>
+</helmet>
+
+<div id="pageInner" style="position: relative; width: 100%; height: 100vh; min-height: 540px; overflow: hidden; background: #070a08; font-family: Outfit, Helvetica, sans-serif; color: #fff;">
+
+  <div id="hero">
+    <div id="stage">
+      <div id="skyFill" style="position: absolute; left: 0; right: 0; top: 0; height: 0; background: linear-gradient(90deg, rgb(162,154,165) 0%, rgb(120,138,168) 22%, rgb(119,134,157) 42%, rgb(97,112,135) 62%, rgb(76,93,117) 82%, rgb(67,86,110) 100%);"></div>
+      <img id="heroImg" src="./assets/hero-lp-wide2.png" alt="Casa residencial com sistema fotovoltaico, veículo elétrico carregando e bateria de armazenamento">
+      <div class="veil" style="background: linear-gradient(170deg, rgba(6,10,8,0.8) 0%, rgba(6,10,8,0.32) 26%, rgba(6,10,8,0) 44%);"></div>
+      <div class="veil" style="background: linear-gradient(0deg, rgba(6,10,8,0.62) 0%, rgba(6,10,8,0.26) 13%, rgba(6,10,8,0) 32%);"></div>
+
+      <div id="fxEv" class="fx"><span></span><span></span><i></i></div>
+
+      <div id="stageGrid">
+        <div id="logoRow" style="display: flex; align-items: center; gap: 24px; width: max-content;">
+          <img src="./assets/logo-begreen.png" alt="BeGreen" style="height: min(2.9vw, 5.4vh, 44px); width: auto; display: block;">
+          <span style="width: 1px; height: clamp(22px, 2.1vw, 32px); background: rgba(255,255,255,0.26);"></span>
+          <img src="./assets/logo-bmw.png" alt="BMW" style="height: min(3.1vw, 5.8vh, 48px); width: auto; display: block;">
+        </div>
+
+        <div style="display: grid; min-height: 0; align-content: start; margin-top: calc(-1 * min(3.1vw, 5.8vh, 48px));">
+          <h1 style="margin: 0; font-size: min(3.9vw, 7.2vh, 60px); font-weight: 600; line-height: 1.04; letter-spacing: -0.028em; text-wrap: balance; text-shadow: 0 2px 26px rgba(0,0,0,0.55); width: max-content; max-width: 100%;">Uma casa.<br>Três sistemas.<br><span style="color: #23D964;">Energia própria.</span></h1>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: clamp(18px, 2.8vw, 44px);">
+          <div style="display: flex; align-items: baseline; gap: 9px;">
+            <div style="font-size: min(2.1vw, 4vh, 32px); font-weight: 600; letter-spacing: -0.03em; color: #23D964; line-height: 1; text-shadow: 0 1px 12px rgba(0,0,0,0.75);">+17</div>
+            <div style="font-size: min(0.85vw, 1.6vh, 13px); font-weight: 300; color: rgba(255,255,255,0.8); text-shadow: 0 1px 12px rgba(0,0,0,0.75);">anos de experiência</div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 9px;">
+            <div style="font-size: min(2.1vw, 4vh, 32px); font-weight: 600; letter-spacing: -0.03em; color: #23D964; line-height: 1; text-shadow: 0 1px 12px rgba(0,0,0,0.75);">+12k</div>
+            <div style="font-size: min(0.85vw, 1.6vh, 13px); font-weight: 300; color: rgba(255,255,255,0.8); text-shadow: 0 1px 12px rgba(0,0,0,0.75);">pontos de recarga instalados</div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 9px;">
+            <div style="font-size: min(2.1vw, 4vh, 32px); font-weight: 600; letter-spacing: -0.03em; color: #23D964; line-height: 1; text-shadow: 0 1px 12px rgba(0,0,0,0.75);">26</div>
+            <div style="font-size: min(0.85vw, 1.6vh, 13px); font-weight: 300; color: rgba(255,255,255,0.8); text-shadow: 0 1px 12px rgba(0,0,0,0.75);">estados atendidos</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 9px; margin-left: auto; font-size: clamp(9px, 0.78vw, 12px); font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.72); text-shadow: 0 1px 12px rgba(0,0,0,0.6);">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #23D964;"></span>
+            <span>Engenharia própria · ISO 9001</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobileHead">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 18px; align-self: center;">
+      <img src="./assets/logo-begreen.png" alt="BeGreen" style="height: 32px; width: auto; display: block;">
+      <span style="width: 1px; height: 24px; background: rgba(255,255,255,0.26);"></span>
+      <img src="./assets/logo-bmw.png" alt="BMW" style="height: 34px; width: auto; display: block;">
+    </div>
+    <h2 style="margin: 0; font-size: 30px; font-weight: 600; line-height: 1.08; letter-spacing: -0.028em;">Uma casa. Três sistemas.<br><span style="color: #23D964;">Energia própria.</span></h2>
+    <p style="margin: 0; font-size: 15px; font-weight: 300; line-height: 1.5; color: rgba(255,255,255,0.8);">Projeto, homologação e instalação com equipe própria.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 18px 26px;">
+      <div style="display: flex; align-items: baseline; gap: 7px;"><span style="font-size: 22px; font-weight: 600; color: #23D964;">+17</span><span style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.78);">anos de experiência</span></div>
+      <div style="display: flex; align-items: baseline; gap: 7px;"><span style="font-size: 22px; font-weight: 600; color: #23D964;">+12k</span><span style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.78);">pontos de recarga</span></div>
+      <div style="display: flex; align-items: baseline; gap: 7px;"><span style="font-size: 22px; font-weight: 600; color: #23D964;">26</span><span style="font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.78);">estados atendidos</span></div>
+    </div>
+  </div>
+
+  <div id="mobileSystems" style="gap: 20px; padding: 4px 20px 24px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #23D964;">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #23D964;"></span>Carregador para veículo elétrico
+      </div>
+      <p style="margin: 0; font-size: 15px; font-weight: 300; line-height: 1.5; color: rgba(255,255,255,0.8);">Mobilidade elétrica com praticidade e segurança.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #23D964;">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #23D964;"></span>Bateria de armazenamento
+      </div>
+      <p style="margin: 0; font-size: 15px; font-weight: 300; line-height: 1.5; color: rgba(255,255,255,0.8);">Armazena o excedente de energia e garante autonomia quando você mais precisa.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #23D964;">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #23D964;"></span>Energia fotovoltaica
+      </div>
+      <p style="margin: 0; font-size: 15px; font-weight: 300; line-height: 1.5; color: rgba(255,255,255,0.8);">Sua própria energia limpa e renovável.</p>
+    </div>
+  </div>
+
+  <div id="formZone">
+    <form id="leadForm" novalidate="" style="display: contents;">
+      <div id="formCard" style="width: 100%; display: flex; flex-direction: column; gap: 10px; padding: clamp(13px, 1.2vw, 17px) clamp(14px, 1.3vw, 18px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.16); background: rgba(8,13,10,0.66); backdrop-filter: blur(18px);">
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #23D964;">
+            <span style="width: 5px; height: 5px; border-radius: 50%; background: #23D964;"></span>Visita técnica gratuita
+          </div>
+          <div style="font-size: 17px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em;">Preencha aqui para solicitar uma visita técnica gratuita</div>
+        </div>
+
+        <div id="fieldGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px 12px; align-items: end;">
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Nome*</span>
+            <input type="text" name="nome" placeholder="Nome completo" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">CPF/CNPJ*</span>
+            <input type="text" name="cpf_cnpj" data-doc="" placeholder="000.000.000-00" inputmode="numeric" maxlength="18" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Telefone*</span>
+            <input type="tel" name="telefone" data-fone="" placeholder="(11) 9.0000-0000" inputmode="numeric" maxlength="16" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Email*</span>
+            <input type="email" name="email" placeholder="nome@email.com" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Endereço para instalação do carregador*</span>
+            <input type="text" name="endereco" placeholder="Rua / Avenida" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Número da residência*</span>
+            <input type="text" name="numero" placeholder="Nº" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Cidade em que você reside*</span>
+            <input type="text" name="cidade" placeholder="Cidade" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Estado em que você reside*</span>
+            <select name="estado" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none; appearance: none; cursor: pointer; border-radius: 0;">
+              <option value="" style="background: #0b120e; color: #fff;">Selecione</option>
+              <option value="AC" style="background: #0b120e; color: #fff;">Acre</option>
+              <option value="AL" style="background: #0b120e; color: #fff;">Alagoas</option>
+              <option value="AP" style="background: #0b120e; color: #fff;">Amapá</option>
+              <option value="AM" style="background: #0b120e; color: #fff;">Amazonas</option>
+              <option value="BA" style="background: #0b120e; color: #fff;">Bahia</option>
+              <option value="CE" style="background: #0b120e; color: #fff;">Ceará</option>
+              <option value="DF" style="background: #0b120e; color: #fff;">Distrito Federal</option>
+              <option value="ES" style="background: #0b120e; color: #fff;">Espírito Santo</option>
+              <option value="GO" style="background: #0b120e; color: #fff;">Goiás</option>
+              <option value="MA" style="background: #0b120e; color: #fff;">Maranhão</option>
+              <option value="MT" style="background: #0b120e; color: #fff;">Mato Grosso</option>
+              <option value="MS" style="background: #0b120e; color: #fff;">Mato Grosso do Sul</option>
+              <option value="MG" style="background: #0b120e; color: #fff;">Minas Gerais</option>
+              <option value="PA" style="background: #0b120e; color: #fff;">Pará</option>
+              <option value="PB" style="background: #0b120e; color: #fff;">Paraíba</option>
+              <option value="PR" style="background: #0b120e; color: #fff;">Paraná</option>
+              <option value="PE" style="background: #0b120e; color: #fff;">Pernambuco</option>
+              <option value="PI" style="background: #0b120e; color: #fff;">Piauí</option>
+              <option value="RJ" style="background: #0b120e; color: #fff;">Rio de Janeiro</option>
+              <option value="RN" style="background: #0b120e; color: #fff;">Rio Grande do Norte</option>
+              <option value="RS" style="background: #0b120e; color: #fff;">Rio Grande do Sul</option>
+              <option value="RO" style="background: #0b120e; color: #fff;">Rondônia</option>
+              <option value="RR" style="background: #0b120e; color: #fff;">Roraima</option>
+              <option value="SC" style="background: #0b120e; color: #fff;">Santa Catarina</option>
+              <option value="SP" style="background: #0b120e; color: #fff;">São Paulo</option>
+              <option value="SE" style="background: #0b120e; color: #fff;">Sergipe</option>
+              <option value="TO" style="background: #0b120e; color: #fff;">Tocantins</option>
+            </select>
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">CEP*</span>
+            <input type="text" name="cep" data-cep="" placeholder="00000-000" inputmode="numeric" maxlength="9" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Tipo de local*</span>
+            <select name="tipo_local" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none; appearance: none; cursor: pointer; border-radius: 0;">
+              <option value="" style="background: #0b120e; color: #fff;">Selecione</option>
+              <option value="Casa" style="background: #0b120e; color: #fff;">Casa</option>
+              <option value="Apartamento" style="background: #0b120e; color: #fff;">Apartamento / Condomínio</option>
+              <option value="Empresa" style="background: #0b120e; color: #fff;">Empresa</option>
+              <option value="Outro" style="background: #0b120e; color: #fff;">Outro</option>
+            </select>
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Modelo do veículo*</span>
+            <input type="text" name="modelo_veiculo" placeholder="Modelo do veículo" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none;">
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+            <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5);">Concessionária BMW*</span>
+            <select name="concessionaria" required="{{ true }}" style="width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.32); padding: 0 0 7px; font-size: 14px; color: #fff; outline: none; appearance: none; cursor: pointer; border-radius: 0;">
+              <option value="" style="background: #0b120e; color: #fff;">Selecione</option>
+              <option value="Agulhas Negras - 23 de Maio" style="background: #0b120e; color: #fff;">Agulhas Negras - 23 de Maio</option>
+              <option value="Agulhas Negras - 23 de Maio (Pós-Vendas)" style="background: #0b120e; color: #fff;">Agulhas Negras - 23 de Maio (Pós-Vendas)</option>
+              <option value="Agulhas Negras - SBC" style="background: #0b120e; color: #fff;">Agulhas Negras - SBC</option>
+              <option value="Autokraft - Rio de Janeiro" style="background: #0b120e; color: #fff;">Autokraft - Rio de Janeiro</option>
+              <option value="Autostar - Colômbia" style="background: #0b120e; color: #fff;">Autostar - Colômbia</option>
+              <option value="Autostar - Nações Unidas" style="background: #0b120e; color: #fff;">Autostar - Nações Unidas</option>
+              <option value="Autostar - Vila Olímpia" style="background: #0b120e; color: #fff;">Autostar - Vila Olímpia</option>
+              <option value="Barigui - Maringá" style="background: #0b120e; color: #fff;">Barigui - Maringá</option>
+              <option value="Barigui - Ponta Grossa" style="background: #0b120e; color: #fff;">Barigui - Ponta Grossa</option>
+              <option value="BM Belém" style="background: #0b120e; color: #fff;">BM Belém</option>
+              <option value="BM Rio" style="background: #0b120e; color: #fff;">BM Rio</option>
+              <option value="BM Rio (Pós-Vendas)" style="background: #0b120e; color: #fff;">BM Rio (Pós-Vendas)</option>
+              <option value="BM Vitória" style="background: #0b120e; color: #fff;">BM Vitória</option>
+              <option value="BM Vitória (Pós-Vendas)" style="background: #0b120e; color: #fff;">BM Vitória (Pós-Vendas)</option>
+              <option value="Braga Motors - Manaus" style="background: #0b120e; color: #fff;">Braga Motors - Manaus</option>
+              <option value="Canopus - Cuiabá" style="background: #0b120e; color: #fff;">Canopus - Cuiabá</option>
+              <option value="Euro Import - Cascavel" style="background: #0b120e; color: #fff;">Euro Import - Cascavel</option>
+              <option value="Euro Import - Curitiba" style="background: #0b120e; color: #fff;">Euro Import - Curitiba</option>
+              <option value="Euro Import - Joinville" style="background: #0b120e; color: #fff;">Euro Import - Joinville</option>
+              <option value="Euro Import - Londrina" style="background: #0b120e; color: #fff;">Euro Import - Londrina</option>
+              <option value="Euro Motors - Jundiaí" style="background: #0b120e; color: #fff;">Euro Motors - Jundiaí</option>
+              <option value="Euro Motors - Rio Preto" style="background: #0b120e; color: #fff;">Euro Motors - Rio Preto</option>
+              <option value="Eurobike - Brasília" style="background: #0b120e; color: #fff;">Eurobike - Brasília</option>
+              <option value="Eurobike - Campinas (Carolina Florence)" style="background: #0b120e; color: #fff;">Eurobike - Campinas (Carolina Florence)</option>
+              <option value="Eurobike - Campinas (Julio de Mesquita)" style="background: #0b120e; color: #fff;">Eurobike - Campinas (Julio de Mesquita)</option>
+              <option value="Eurobike - Ribeirão Preto" style="background: #0b120e; color: #fff;">Eurobike - Ribeirão Preto</option>
+              <option value="Euroville - Belo Horizonte" style="background: #0b120e; color: #fff;">Euroville - Belo Horizonte</option>
+              <option value="Euroville - Belo Horizonte (Pós-Vendas)" style="background: #0b120e; color: #fff;">Euroville - Belo Horizonte (Pós-Vendas)</option>
+              <option value="Euroville - Juiz de Fora" style="background: #0b120e; color: #fff;">Euroville - Juiz de Fora</option>
+              <option value="Euroville - Uberaba" style="background: #0b120e; color: #fff;">Euroville - Uberaba</option>
+              <option value="Euroville - Uberlândia" style="background: #0b120e; color: #fff;">Euroville - Uberlândia</option>
+              <option value="Germânica - Piracicaba" style="background: #0b120e; color: #fff;">Germânica - Piracicaba</option>
+              <option value="Germânica - Sorocaba" style="background: #0b120e; color: #fff;">Germânica - Sorocaba</option>
+              <option value="Grand Brasil - Alphaville" style="background: #0b120e; color: #fff;">Grand Brasil - Alphaville</option>
+              <option value="Grand Brasil - Gastão Vidigal" style="background: #0b120e; color: #fff;">Grand Brasil - Gastão Vidigal</option>
+              <option value="Haus - Aracaju" style="background: #0b120e; color: #fff;">Haus - Aracaju</option>
+              <option value="Haus - Fortaleza" style="background: #0b120e; color: #fff;">Haus - Fortaleza</option>
+              <option value="Haus - Maceió" style="background: #0b120e; color: #fff;">Haus - Maceió</option>
+              <option value="Haus - Palmas" style="background: #0b120e; color: #fff;">Haus - Palmas</option>
+              <option value="Haus - Salvador" style="background: #0b120e; color: #fff;">Haus - Salvador</option>
+              <option value="Iesa - Caxias do Sul" style="background: #0b120e; color: #fff;">Iesa - Caxias do Sul</option>
+              <option value="Iesa - Novo Hamburgo" style="background: #0b120e; color: #fff;">Iesa - Novo Hamburgo</option>
+              <option value="Iesa - Passo Fundo" style="background: #0b120e; color: #fff;">Iesa - Passo Fundo</option>
+              <option value="Iesa - Porto Alegre" style="background: #0b120e; color: #fff;">Iesa - Porto Alegre</option>
+              <option value="Isar Motors - Teresina" style="background: #0b120e; color: #fff;">Isar Motors - Teresina</option>
+              <option value="Munique Motors - Porto Velho" style="background: #0b120e; color: #fff;">Munique Motors - Porto Velho</option>
+              <option value="Original - São Luís" style="background: #0b120e; color: #fff;">Original - São Luís</option>
+              <option value="Osten - Barra Funda (Pós-Vendas)" style="background: #0b120e; color: #fff;">Osten - Barra Funda (Pós-Vendas)</option>
+              <option value="Osten - Santos" style="background: #0b120e; color: #fff;">Osten - Santos</option>
+              <option value="Osten - São José dos Campos" style="background: #0b120e; color: #fff;">Osten - São José dos Campos</option>
+              <option value="Osten - Sumaré" style="background: #0b120e; color: #fff;">Osten - Sumaré</option>
+              <option value="Osten - Tatuapé" style="background: #0b120e; color: #fff;">Osten - Tatuapé</option>
+              <option value="PG Prime - João Pessoa" style="background: #0b120e; color: #fff;">PG Prime - João Pessoa</option>
+              <option value="PG Prime - Natal" style="background: #0b120e; color: #fff;">PG Prime - Natal</option>
+              <option value="Raviera - Campo Grande" style="background: #0b120e; color: #fff;">Raviera - Campo Grande</option>
+              <option value="Raviera - Dourados" style="background: #0b120e; color: #fff;">Raviera - Dourados</option>
+              <option value="Sael - Recife" style="background: #0b120e; color: #fff;">Sael - Recife</option>
+              <option value="Saga - Goiânia" style="background: #0b120e; color: #fff;">Saga - Goiânia</option>
+              <option value="Top Car - Balneário Camboriú" style="background: #0b120e; color: #fff;">Top Car - Balneário Camboriú</option>
+              <option value="Top Car - Blumenau" style="background: #0b120e; color: #fff;">Top Car - Blumenau</option>
+              <option value="Top Car - Chapecó" style="background: #0b120e; color: #fff;">Top Car - Chapecó</option>
+              <option value="Top Car - Criciúma" style="background: #0b120e; color: #fff;">Top Car - Criciúma</option>
+              <option value="Top Car - Florianópolis" style="background: #0b120e; color: #fff;">Top Car - Florianópolis</option>
+            </select>
+          </label>
+
+        </div>
+
+        <label style="display: flex; align-items: flex-start; gap: 9px; font-size: 11.5px; font-weight: 300; line-height: 1.45; color: rgba(255,255,255,0.8); cursor: pointer;">
+          <input type="checkbox" name="consentimento" style="width: 14px; height: 14px; margin: 2px 0 0; accent-color: #23D964; flex: 0 0 auto;">
+          <span>Eu concordo em receber comunicações da BeGreen e da concessionária BMW selecionada para saber mais sobre minha instalação.</span>
+        </label>
+
+        <p style="margin: 0; font-size: 10.5px; font-weight: 300; line-height: 1.5; color: rgba(255,255,255,0.55);">A nossa empresa está comprometida a proteger e respeitar sua privacidade. Ao informar meus dados, estou ciente das diretrizes da <a href="./politica-de-privacidade.html" target="_blank" rel="noopener" style="text-decoration: underline;">Política de Privacidade</a>.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="submit" id="btnEnviar" style="width: 100%; padding: 13px 26px; border: 0; border-radius: 999px; background: #23D964; color: #06120a; font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; transition: background 160ms ease;">Enviar Formulário</button>
+          <div id="statusMsg" style="display: none; font-size: 11.5px; font-weight: 300; text-align: center; color: rgba(255,255,255,0.78);"></div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.fit = this.fit.bind(this);
+    this.fit();
+    window.addEventListener('resize', this.fit);
+    window.addEventListener('orientationchange', this.fit);
+    window.addEventListener('load', this.fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.fit);
+    this.wireMasks();
+    this.wireSubmit();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.fit);
+    window.removeEventListener('orientationchange', this.fit);
+    window.removeEventListener('load', this.fit);
+  }
+  fit() {
+    var stageEl = document.getElementById('stage');
+    var hero = document.getElementById('hero');
+    if (hero) hero.style.removeProperty('height');
+    if (!stageEl) return;
+    var W = stageEl.clientWidth, H = stageEl.clientHeight, iw = 1600, ih = 685;
+    if (!W || !H) return;
+    // fit to width so the driveway/ground is never cropped away on wide screens;
+    // when the frame is taller than the scaled photo, pin the photo to the bottom and
+    // extend the dusk sky above it (#skyFill)
+    var s = Math.max(W / iw, H / ih);
+    var mobile = window.matchMedia('(max-width: 900px)').matches;
+    if (!mobile && W / H > iw / ih) s = W / iw;
+    var dw = iw * s, dh = ih * s;
+    var ox = (W - dw) * 0.5, oy = dh >= H ? -Math.min(0.10 * dh, dh - H) : (H - dh);
+    var sky = document.getElementById('skyFill');
+    if (sky) sky.style.height = Math.max(0, oy + 2) + 'px';
+    var hi = document.getElementById('heroImg');
+    if (hi) {
+      hi.style.width = dw + 'px';
+      hi.style.height = dh + 'px';
+      hi.style.left = ox + 'px';
+      hi.style.top = oy + 'px';
+    }
+    function disc(id, fx, fy, fr) {
+      var el = document.getElementById(id); if (!el) return;
+      var d = Math.max(6, 2 * fr * dw);
+      el.style.left = (ox + fx * dw - d / 2) + 'px';
+      el.style.top = (oy + fy * dh - d / 2) + 'px';
+      el.style.width = d + 'px';
+      el.style.height = d + 'px';
+    }
+    var zone = document.getElementById('formZone');
+    var card = document.getElementById('formCard');
+    if (zone && card) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        zone.style.width = '';
+        zone.style.top = '';
+        zone.style.transform = '';
+      } else {
+        var pageEl = document.getElementById('pageInner');
+        var pr = pageEl.getBoundingClientRect();
+        var gapR = parseFloat(getComputedStyle(zone).right) || 24;
+        var gapB = parseFloat(getComputedStyle(zone).bottom) || 24;
+        // measured on the drawn image: battery caption ends at x 0.678, the
+        // photovoltaic caption occupies the frame down to y 0.17
+        var avail = pr.width - gapR - (ox + 0.6250 * dw) - 12;
+        var topLimit = Math.max(0, oy + 0.185 * dh);
+        var minW = 272;
+        var W2 = Math.max(minW, Math.min(344, avail));
+        zone.style.transform = 'none';
+        zone.style.width = W2 + 'px';
+        var s2 = Math.min(1, (pr.height - gapB - topLimit - 2) / card.scrollHeight, avail / W2);
+        zone.style.transform = s2 < 1 ? 'scale(' + s2 + ')' : 'none';
+      }
+    }
+    var row = document.getElementById('logoRow');
+    if (row) {
+      row.style.transform = 'none';
+      var rr = row.getBoundingClientRect(), sr3 = stageEl.getBoundingClientRect();
+      row.style.transform = 'translateX(' + (((sr3.width - rr.width) / 2) - (rr.left - sr3.left)) + 'px)';
+    }
+    // wallbox LED measured on assets/hero-lp-wide2.png at (452, 384)
+    disc('fxEv', 0.28281, 0.56131, 0.0135);
+  }
+  wireMasks() {
+    function fone(v) {
+      var d = String(v || '').replace(/\D/g, '').slice(0, 11);
+      if (!d) return '';
+      if (d.length <= 2) return '(' + d;
+      var out = '(' + d.slice(0, 2) + ') ';
+      if (d.length <= 3) return out + d.slice(2);
+      if (d.length <= 7) return out + d.slice(2, 3) + '.' + d.slice(3);
+      return out + d.slice(2, 3) + '.' + d.slice(3, 7) + '-' + d.slice(7);
+    }
+    function doc(v) {
+      var d = String(v || '').replace(/\D/g, '').slice(0, 14);
+      if (d.length <= 11) {
+        return d.replace(/^(\d{3})(\d)/, '$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+                .replace(/\.(\d{3})(\d{1,2})$/, '.$1-$2');
+      }
+      return d.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+              .replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+    }
+    function cep(v) {
+      var d = String(v || '').replace(/\D/g, '').slice(0, 8);
+      return d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d;
+    }
+    var form = document.getElementById('leadForm');
+    if (!form) return;
+    [['[data-fone]', fone], ['[data-doc]', doc], ['[data-cep]', cep]].forEach(function (pair) {
+      Array.prototype.forEach.call(form.querySelectorAll(pair[0]), function (el) {
+        el.addEventListener('input', function () { el.value = pair[1](el.value); });
+      });
+    });
+    Array.prototype.forEach.call(form.querySelectorAll('[data-fone]'), function (el) {
+      el.addEventListener('blur', function () {
+        if (el.value && el.value.replace(/\D/g, '').length !== 11) el.setCustomValidity('Telefone incompleto');
+        else el.setCustomValidity('');
+      });
+      el.addEventListener('focus', function () { el.setCustomValidity(''); });
+    });
+  }
+  wireSubmit() {
+    var form = document.getElementById('leadForm');
+    var btn = document.getElementById('btnEnviar');
+    var card = document.getElementById('formCard');
+    var status = document.getElementById('statusMsg');
+    if (!form) return;
+    var cfg = window.RD_CONFIG || { endpoint: '/api/lead', identificador: 'lp-begreen-casa' };
+    function say(msg, color) {
+      status.textContent = msg;
+      status.style.color = color || 'rgba(255,255,255,0.78)';
+      status.style.display = 'block';
+    }
+    function utm(n) { return new URLSearchParams(location.search).get(n) || ''; }
+    function cookie(n) {
+      var m = document.cookie.match('(^|;)\\s*' + n + '\\s*=\\s*([^;]+)');
+      return m ? decodeURIComponent(m.pop()) : '';
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      Array.prototype.forEach.call(form.querySelectorAll('input,select'), function (el) {
+        el.setAttribute('data-touched', '');
+      });
+      if (!form.checkValidity()) { say('Preencha os campos obrigatórios.', '#ffb4b4'); return; }
+      var d = new FormData(form);
+      function g(k) { return (d.get(k) || '').toString().trim(); }
+      var dados = {
+        conversion_identifier: cfg.identificador,
+        cliente_nome: g('nome'),
+        cliente_email: g('email'),
+        cliente_telefone: g('telefone'),
+        cpf_cnpj: g('cpf_cnpj'),
+        endereco: g('endereco'),
+        numero: g('numero'),
+        cidade: g('cidade'),
+        estado: g('estado'),
+        cep: g('cep'),
+        tipo_local: g('tipo_local'),
+        modelo_veiculo: g('modelo_veiculo'),
+        concessionaria: g('concessionaria'),
+        consentimento: form.querySelector('[name="consentimento"]').checked,
+        traffic_source: cookie('__trf.src'),
+        utm_source: utm('utm_source'),
+        utm_medium: utm('utm_medium'),
+        utm_campaign: utm('utm_campaign'),
+        page_url: location.href
+      };
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      say('Enviando…');
+      function ok() {
+        form.reset();
+        if (card) {
+          card.style.transition = 'background 400ms ease, border-color 400ms ease, box-shadow 400ms ease';
+          card.style.background = 'rgba(18,92,48,0.78)';
+          card.style.borderColor = 'rgba(35,217,100,0.85)';
+          card.style.boxShadow = '0 0 0 1px rgba(35,217,100,0.35), 0 12px 48px rgba(35,217,100,0.22)';
+          setTimeout(function () {
+            card.style.background = 'rgba(8,13,10,0.66)';
+            card.style.borderColor = 'rgba(255,255,255,0.16)';
+            card.style.boxShadow = 'none';
+          }, 6000);
+        }
+        say('Recebemos suas informações. Obrigado!', '#23D964');
+        if (window.dataLayer) window.dataLayer.push({ event: 'lead_enviado' });
+      }
+      fetch(cfg.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      }).then(function (r) {
+        if (r.ok) { ok(); return; }
+        return r.text().then(function (t) { throw new Error('HTTP ' + r.status + ' ' + t); });
+      }).catch(function (err) {
+        console.warn('RD Station:', err && err.message);
+        say('Não foi possível enviar. Tente novamente.', '#ffb4b4');
+      }).finally(function () {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      });
+    });
+  }
+}
+</script>
+</body>
+</html>
