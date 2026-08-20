@@ -31,6 +31,7 @@ module.exports = async function handler(req, res) {
     cf_cep: b.cep,
     cf_tipo_de_local: b.tipo_local,
     cf_modelo_do_veiculo: b.modelo_veiculo,
+    cf_concessionaria_gac: b.concessionaria,
     cf_concessionaria_bmw: b.concessionaria,
     cf_concessionaria: b.concessionaria,
     traffic_source: b.traffic_source,
